@@ -1,3 +1,5 @@
+import AppExceptions.PostNotFoundException
+
 object WallService {
     private var posts = emptyArray<Post>()
     private var nextId: Long = 1

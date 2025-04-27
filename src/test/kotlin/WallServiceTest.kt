@@ -1,3 +1,4 @@
+import AppExceptions.PostNotFoundException
 import org.junit.Test
 
 import org.junit.Assert.*

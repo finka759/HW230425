@@ -1,3 +1,5 @@
+package Attachments
+
 class VideoFile(
     val id: Int,
     override val ownerId: Int,

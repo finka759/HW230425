@@ -1,3 +1,5 @@
+package Attachments
+
 class PhotoFile(
     val id: Int,
     override val ownerId: Int,
