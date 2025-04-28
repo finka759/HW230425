@@ -26,6 +26,10 @@ fun main() {
     println("\nВозвращение списка заметок")
     println(noteService.get())
 
+    println("\nEdit")
+    noteService.edit(1, "Заголовок2111", "Текст заметки12111")
+    noteService.printNote()
+
     println("\nВозвращение заметки по её id")
     println(noteService.getById(0))
     println(noteService.getById(1))

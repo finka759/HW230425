@@ -27,14 +27,18 @@ object NoteServiceImpl : NoteService {
     }
 
 
-        override fun add(title: String, text: String): Int {
+
+
+
+
+    override fun add(title: String, text: String): Int {
         val note = Note(id = nId++, title = title, text = text)
         notes.add(note)
         return notes.lastIndex
     }
 
     override fun createComment(noteId: Int, message: String): Int {
-        if (notes[noteId] in notes) {
+        if(getById(noteId) != null) {
             val comment = Comment(id = cId++, text = message, noteId = noteId)
             comments.add(comment)
             return comments.lastIndex
@@ -43,36 +47,37 @@ object NoteServiceImpl : NoteService {
     }
 
     override fun delete(noteId: Int): Int {
-        if (notes[noteId] in notes) {
-            notes.removeAt(noteId)
+        val deletingNote: Note? = getById(noteId)
+        if (deletingNote != null) {
+            deletingNote.deleted = true
             return 1
         }
         throw NoteNotFoundException("delete error, note not exist")
     }
 
     override fun deleteComment(commentId: Int): Int {
-        if (comments[commentId] in comments) {
-            comments[commentId].deleted = true
+        val deletingComment: Comment? = getCommentById(commentId)
+        if (deletingComment != null) {
+            deletingComment.deleted = true
             return 1
         }
         throw NoteNotFoundException("comment with id not found")
     }
 
     override fun edit(noteId: Int, title: String, text: String): Int {
-        if (notes[noteId] in notes) {
-            notes.removeAt(noteId)
-            notes[noteId] = notes[noteId].copy(title = title, text = text)
-            notes.add(notes[noteId])
+        val editingNote: Note? = getById(noteId)
+        if (editingNote != null) {
+            editingNote.title = title
+            editingNote.text = text
             return 1
         }
         throw NoteNotFoundException("edit error, note with id not found")
     }
 
     override fun editComment(commentId: Int, message: String): Int {
-        if (comments[commentId] in comments) {
-            comments.removeAt(commentId)
-            comments[commentId] = comments[commentId].copy(text = message)
-            comments.add(comments[commentId])
+        val editingComment: Comment? = getCommentById(commentId)
+        if (editingComment != null) {
+            editingComment.text = message
             return 1
         }
         throw NoteNotFoundException("edit comment error, comment with id not found")
@@ -81,24 +86,24 @@ object NoteServiceImpl : NoteService {
     override fun get(): List<Note> {
         return notes
     }
-
-    override fun getById(noteId: Int): Note {
-        if (notes[noteId] in notes) {
-            return notes[noteId]
-        }
-        throw NoteNotFoundException("error, note with id not found")
+    override fun getById(noteId: Int,): Note? {
+        return notes.find { it.id.toInt() == noteId }
     }
 
+    private fun getCommentById(noteId: Int,): Comment? {
+        return  comments.find { it.id == noteId }
+    }
     override fun getComments(noteId: Int): List<Comment> {
-        if (notes[noteId] in notes) {
+        if (getById(noteId) != null) {
             return comments.filter { it.noteId == noteId && !it.deleted }
         }
         throw NoteNotFoundException("error, note with id not found")
     }
 
     override fun restoreComment(commentId: Int): Int {
-        if (comments[commentId] in comments) {
-            comments[commentId].deleted = false
+        val restoringComment: Comment? = getCommentById(commentId)
+        if (restoringComment != null) {
+            restoringComment.deleted = false
             return 1
         }
         throw NoteNotFoundException("error, comment with id not found")
@@ -106,16 +111,19 @@ object NoteServiceImpl : NoteService {
 
     fun printNote() {
         for (note in notes) {
-            println(note)
+            if (!note.deleted) {
+                println(note)
+            }
         }
     }
 
     fun printComments() {
         for (comment in comments) {
-            if (!comment.deleted) {println(comment)}
+            if (!comment.deleted) {
+                println(comment)
+            }
 
         }
     }
-
 
 }

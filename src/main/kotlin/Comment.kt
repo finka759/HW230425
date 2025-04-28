@@ -4,7 +4,7 @@ data class Comment(
     val id: Int = 0,//integer Идентификатор комментария.
     val fromId: Int = 0,//integer Идентификатор автора комментария.
     val date: Int = 0,//integer Дата создания комментария в формате Unixtime.
-    val text: String = "",//string Текст комментария.
+    var text: String = "",//string Текст комментария.
     val donut: Donut = Donut(),//object Информация о VK Donut.
     val replyToUser: Int = 0, //integer Идентификатор пользователя или сообщества, в ответ которому оставлен текущий комментарий (если применимо).
     val replyToComment: Int = 0, //integer Идентификатор комментария, в ответ на который оставлен текущий (если применимо).
